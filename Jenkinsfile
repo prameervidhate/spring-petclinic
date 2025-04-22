@@ -3,14 +3,14 @@ pipeline {
 
     environment {
         TOMCAT_USER = 'ec2-user'
-        TOMCAT_IP = 'your-tomcat-ec2-public-ip'
+        TOMCAT_IP = '54.198.144.124'
         TOMCAT_PATH = '/opt/tomcat/webapps'
     }
 
     stages {
         stage('Clone Code') {
             steps {
-                git 'https://github.com/your-username/your-repo.git'
+                git 'https://github.com/prameervidhate/spring-petclinic.git'
             }
         }
 
@@ -23,9 +23,9 @@ pipeline {
         stage('Deploy to Tomcat') {
             steps {
                 sh '''
-                scp -o StrictHostKeyChecking=no target/*.war ${TOMCAT_USER}@${TOMCAT_IP}:${TOMCAT_PATH}/petclinic.war
-                ssh ${TOMCAT_USER}@${TOMCAT_IP} "/opt/tomcat/bin/shutdown.sh"
-                ssh ${TOMCAT_USER}@${TOMCAT_IP} "/opt/tomcat/bin/startup.sh"
+                scp -o StrictHostKeyChecking=no target/*.war $ec2-user@$54.198.144.124:/opt/tomcat/webapps/petclinic.war
+                ssh $$ec2-user@$54.198.144.124 "/opt/tomcat/bin/shutdown.sh"
+                ssh $ec2-user@$54.198.144.124 "/opt/tomcat/bin/startup.sh"
                 '''
             }
         }
